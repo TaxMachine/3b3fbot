@@ -7,7 +7,7 @@ module.exports = {
         }
         var cleaned = args[1].replace(/-|\\|\/|:|\//, "")
         argtable.db.get(`SELECT joinedAt, username FROM players WHERE username = $username`, {$username: cleaned}, (err, row) => {
-            if (err) return
+            if (err) return bot.chat(`No such player "${cleaned}"`)
             var
                 time = row.joinedAt.replace(".0", ""),
                 date = new Date(parseInt(time))
