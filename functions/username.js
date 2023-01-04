@@ -6,7 +6,7 @@ async function username2uuid(username) {
 }
 async function uuid2username(uuid) {
     var username = await axios.get(`https://sessionserver.mojang.com/session/minecraft/profile/${uuid}`)
-    return username.data.name
+    return await username.data.name
 }
 
 module.exports = {
