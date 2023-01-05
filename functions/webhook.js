@@ -9,7 +9,7 @@ const wsend = async(url, message, avatar, wname) => {
                 "Content-Type": "application/json"
             },
             data: JSON.stringify({
-                avatar: avatar,
+                avatar_url: avatar,
                 username: wname,
                 content: message
             })
