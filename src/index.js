@@ -17,6 +17,12 @@ db.run(`CREATE TABLE IF NOT EXISTS players (
     joinedAt text not null,
     PRIMARY KEY(uuid)
 )`)
+db.run(`CREATE TABLE IF NOT EXISTS playerinfo (
+    uuid text not null,
+    ping text not null,
+    lastseen text,
+    PRIMARY KEY(uuid)
+)`)
 fs.existsSync(`${__dirname}/logs`) ? null : fs.mkdirSync(`${__dirname}/logs`)
 if (!fs.existsSync(`${__dirname}/config.json`)) {
     console.log("config file not found, ")
@@ -46,12 +52,16 @@ const initBot = () => {
     bot.loadPlugin(tps)
     bot.on('message', async(jsonmsg, position, sender, verified) => {
         //await webhook.wsend(config.webhook, message, message.sender)
+        var 
+            player = jsonmsg.with[0].text,
+            joinedAt = Date.now().toString(),
+            uuid = await minecraft.username2uuid(player)
+
         if (jsonmsg.translate == "multiplayer.player.joined" && jsonmsg.with[0].text !== bot.username) {
-            var 
-                player = jsonmsg.with[0].text,
-                joinedAt = Date.now().toString(),
-                uuid = await minecraft.username2uuid(player)
-            console.log(joinedAt)
+            await webhook.wsendEmbed(config.webhook, `${player}`, minecraft.mcavatar(uuid), {
+                title: "Joined the game",
+                color: 65280
+            })
             db.run(`INSERT INTO players (username, uuid, joinedAt) VALUES (
                 $username,
                 $uuid,
@@ -63,11 +73,30 @@ const initBot = () => {
             }, (err) => {})
             
         }
-        //if (sender == minecraft.username2uuid(bot.username)) return
+
+        if (jsonmsg.translate == "multiplayer.player.left" && jsonmsg.with[0].text !== bot.username) {
+            await webhook.wsendEmbed(config.webhook, `${player}`, minecraft.mcavatar(uuid), {
+                title: "Left the game",
+                color: 16711680
+            })
+        }
+
+        if (jsonmsg.translate == "chat.type.advancement.task" || jsonmsg.translate == "chat.type.advancement.challenge" && jsonmsg.with[0].text !== bot.username) {
+            console.log(jsonmsg.with)
+            await webhook.wsendEmbed(config.webhook, player, minecraft.mcavatar(uuid), {
+                title: `has made the advancement `
+            })
+        }
+
         if (jsonmsg.with.length == 1) return
+
         if (jsonmsg.translate !== "chat.type.text") return
+
+        await webhook.wsend(config.webhook, `**${jsonmsg.with[0].text}**> ${jsonmsg.with[1].text.replace(/@|\${|\\/g, "")}`)
+
         if (!jsonmsg.with[1].text.startsWith(config.prefix)) return
-        var 
+
+        var
             msg = jsonmsg.with[1].text,
             args = msg.split(" ")
         CMD.commands().forEach(cmd => {
@@ -83,12 +112,44 @@ const initBot = () => {
     bot.on('kicked', (reason, loggedin) => {
         log(reason)
         console.log("kicked from the server")
-        reconnect()
+        setTimeout(() => reconnect(), 2000)
     })
     bot.on('error', async(error) => {
         log(error)
         console.log("error", error)
-        reconnect()
+        setTimeout(() => reconnect(), 2000)
+    })
+    //bot.on("playerJoined", (player) => console.log(player))
+    //bot.on("playerLeft", (player) => console.log(player))
+    bot.on("playerUpdated", async(player) => {
+        if (player.username == bot.username) return
+        db.run(`INSERT INTO playerinfo VALUES (
+            $uuid,
+            $ping,
+            $lastseen
+        )`, {
+            $uuid: await minecraft.username2uuid(player.username),
+            $ping: player.ping,
+            $lastseen: player.entity ? JSON.stringify({
+                x: Math.round(parseFloat(player.entity.position.x)),
+                y: Math.round(parseFloat(player.entity.position.y)),
+                z: Math.round(parseFloat(player.entity.position.z))
+            }) : ""
+        }, async(err) => {
+            if (err) {
+                db.run(`UPDATE playerinfo
+                SET ping = $ping, lastseen = $lastseen
+                WHERE uuid = $uuid`, {
+                    $ping: player.ping,
+                    $uuid: await minecraft.username2uuid(player.username),
+                    $lastseen: player.entity ? JSON.stringify({
+                        x: Math.round(parseFloat(player.entity.position.x)),
+                        y: Math.round(parseFloat(player.entity.position.y)),
+                        z: Math.round(parseFloat(player.entity.position.z))
+                    }) : ""
+                }, (err) => {})
+            }
+        })
     })
 }
 setTimeout(() => initBot(), 2000)

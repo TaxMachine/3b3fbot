@@ -5,7 +5,7 @@ module.exports = {
             bot.chat("Syntax error: !jd <Player name>")
             return
         }
-        var cleaned = args[1].replace(/-|\\|\/|:|\//, "")
+        var cleaned = args[1].replace(/-|\\|\/|:|\//g, "")
         argtable.db.get(`SELECT joinedAt, username FROM players WHERE username = $username`, {$username: cleaned}, (err, row) => {
             if (err) return bot.chat(`No such player "${cleaned}"`)
             var

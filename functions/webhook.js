@@ -1,19 +1,46 @@
-const fetch = require('node-fetch')
+const axios = require('axios')
 
 const wsend = async(url, message, avatar, wname) => {
-    await fetch(url, {
-        method: "POST",
-        Headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            avatar: avatar,
-            username: wname,
-            content: message
+    try {
+        var req = await axios({
+            url: url,
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            data: JSON.stringify({
+                avatar: avatar,
+                username: wname,
+                content: message
+            })
         })
-    })
+        return req
+    } catch (e) {
+        console.log(e.msg)
+    }
+}
+const wsendEmbed = async(url, wname, avatar, embed) => {
+    try {
+        var req = await axios({
+            url: url,
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            data: JSON.stringify({
+                avatar: avatar,
+                username: wname,
+                embeds: [embed]
+            })
+        })
+        return req
+    } catch (e) {
+        console.log(e.msg)
+    }
+    
 }
 
 module.exports = {
-    wsend
+    wsend,
+    wsendEmbed
 }

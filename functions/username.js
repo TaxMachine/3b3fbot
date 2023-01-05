@@ -9,7 +9,10 @@ async function uuid2username(uuid) {
     return await username.data.name
 }
 
+const mcavatar = (uuid) => `https://crafatar.com/avatars/${uuid}`
+
 module.exports = {
     username2uuid,
-    uuid2username
+    uuid2username,
+    mcavatar
 }
