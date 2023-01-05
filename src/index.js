@@ -1,15 +1,15 @@
 const 
     mineflayer = require('mineflayer'),
-    webhook = require('../functions/webhook'),
+    webhook = require('./functions/webhook'),
     config = require('./config.json'),
-    minecraft = require('../functions/username'),
+    minecraft = require('./functions/username'),
     sqlite = require('sqlite3'),
     db = new sqlite.Database(`${__dirname}/penis.db`),
     {commands} = require('./Command.js'),
     fs = require('fs'),
     {log} = require('./logger'),
     {events} = require('./Event')
-var tps = require('../functions/tps').TPS
+var tps = require('./functions/tps').TPS
 
 
 db.run(`CREATE TABLE IF NOT EXISTS players (
