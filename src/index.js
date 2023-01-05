@@ -21,10 +21,12 @@ db.run(`CREATE TABLE IF NOT EXISTS players (
 db.run(`CREATE TABLE IF NOT EXISTS playerinfo (
     uuid text not null,
     ping text not null,
-    lastseen text,
+    lastseenpos text,
+    lastseentime text not null,
     PRIMARY KEY(uuid)
 )`)
 fs.existsSync(`${__dirname}/logs`) ? null : fs.mkdirSync(`${__dirname}/logs`)
+fs.existsSync(`${__dirname}/chatlogs`) ? null : fs.mkdirSync(`${__dirname}/chatlogs`)
 if (!fs.existsSync(`${__dirname}/config.json`)) {
     console.log("config file not found, ")
     fs.writeFileSync(JSON.stringify({

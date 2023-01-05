@@ -1,6 +1,6 @@
 const 
     sqlite3 = require('sqlite3'),
-    db = new sqlite3.Database(`${__dirname}/../src/penis.db`),
+    db = new sqlite3.Database(`${__dirname}/../penis.db`),
     {username2uuid} = require('./username')
 
 const 
@@ -27,19 +27,22 @@ const
         db.run(`INSERT INTO playerinfo VALUES (
             $uuid,
             $ping,
-            $lastseen
+            $lastseenpos,
+            $lastseentime
         )`, {
             $uuid: await username2uuid(player.username),
             $ping: player.ping,
-            $lastseen: coords
+            $lastseenpos: coords,
+            $lastseentime: Date.now().toString()
         }, async(err) => {
             if (err) {
                 db.run(`UPDATE playerinfo
-                SET ping = $ping, lastseen = $lastseen
+                SET ping = $ping, lastseenpos = $lastseenpos, lastseentime = $lastseentime
                 WHERE uuid = $uuid`, {
                     $ping: player.ping,
                     $uuid: await username2uuid(player.username),
-                    $lastseen: coords
+                    $lastseenpos: coords,
+                    $lastseentime: Date.now().toString()
                 }, (err) => {})
             }
         })

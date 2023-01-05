@@ -1,3 +1,5 @@
-module.exports = async function clean(message) {
+async function clean(message) {
     return message.replace(/-|\\|\/|:|\//g, "")
 }
+
+module.exports = {clean}

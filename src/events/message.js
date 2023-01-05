@@ -13,7 +13,7 @@ module.exports = async function(bot, argtable) {
             uuid = await username2uuid(player)
 
         addPlayerJoin(player, uuid, joinedAt)
-
+        console.log(sender)
         if (jsonmsg.translate == "multiplayer.player.joined" && jsonmsg.with[0].text !== bot.username) {
             await wsendEmbed(config.webhook, `${player}`, mcavatar(uuid), {
                 title: "Joined the game",

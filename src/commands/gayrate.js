@@ -8,8 +8,10 @@ module.exports = {
     description: "Gives the gayrate of a specified player",
     func: async function(bot, args, argtable) {
         if (args.length == 1) return bot.chat(`Wrong syntax: ${this.syntax}`)
-        var gay = Math.floor(Math.random()*100)
-        if (args[1] == uuid2username("64a7dadab6d4433d9b803c96f91ed370")) gay = 0
-        bot.chat(`${clean(args[1])} is ${gay}% gay`)
+        var 
+            gay = Math.floor(Math.random()*100),
+            cleaned = await clean(args[1])
+        if (cleaned == uuid2username("64a7dadab6d4433d9b803c96f91ed370")) gay = 0
+        bot.chat(`${cleaned} is ${gay}% gay`)
     }
 }
