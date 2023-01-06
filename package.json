@@ -12,6 +12,7 @@
   "dependencies": {
     "axios": "^1.2.2",
     "mineflayer": "^4.6.0",
+    "mineflayer-death-event": "^1.0.0",
     "nodemon": "^2.0.20",
     "sqlite3": "^5.1.4"
   }

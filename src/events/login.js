@@ -1,5 +1,7 @@
+const config = require('../config.json')
+
 module.exports = async function(bot, argtable) {
     bot.on("login", async() => {
-        console.log(`Connected to ${bot.host}:${bot.port}`)
+        console.log(`${bot.entity.username} connected on ${config.host}:${config.port}`)
     })
 }

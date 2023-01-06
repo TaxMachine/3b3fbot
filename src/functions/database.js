@@ -46,9 +46,45 @@ const
                 }, (err) => {})
             }
         })
+    },
+    addPlayerKill = async(offender) => {
+        db.run(`INSERT INTO killcount (uuid, kill) VALUES (
+            $uuid,
+            $kill
+        )`, {
+            $uuid: offender.id.replace(/-/g, ""),
+            $kill: 1
+        }, (err) => {
+            if (err) {
+                db.run(`UPDATE killcount
+                SET kill = kill + 1
+                WHERE uuid = $uuid`, {
+                    $uuid: offender.id.replace(/-/g, "")
+                }, (err) => {})
+            }
+        })
+    },
+    addPlayerDeath = async(victim) => {
+        db.run(`INSERT INTO killcount (uuid, death) VALUES (
+            $uuid,
+            $death
+        )`, {
+            $uuid: victim.id.replace(/-/g, ""),
+            $death: 1
+        }, (err) => {
+            if (err) {
+                db.run(`UPDATE killcount
+                SET death = death + 1
+                WHERE uuid = $uuid`, {
+                    $uuid: victim.id.replace(/-/g, "")
+                }, (err) => {})
+            }
+        })
     }
 
 module.exports = {
     addPlayerJoin,
-    playerUpdate
+    playerUpdate,
+    addPlayerKill,
+    addPlayerDeath
 }

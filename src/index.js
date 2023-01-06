@@ -8,7 +8,8 @@ const
     {commands} = require('./Command.js'),
     fs = require('fs'),
     {log} = require('./logger'),
-    {events} = require('./Event')
+    {events} = require('./Event'),
+    death = require('mineflayer-death-event')
 var tps = require('./functions/tps').TPS
 
 
@@ -25,6 +26,12 @@ db.run(`CREATE TABLE IF NOT EXISTS playerinfo (
     lastseentime text not null,
     PRIMARY KEY(uuid)
 )`)
+db.run(`CREATE TABLE IF NOT EXISTS killcount (
+    uuid text not null,
+    kill int,
+    death int,
+    PRIMARY KEY(uuid)
+)`)
 fs.existsSync(`${__dirname}/logs`) ? null : fs.mkdirSync(`${__dirname}/logs`)
 fs.existsSync(`${__dirname}/chatlogs`) ? null : fs.mkdirSync(`${__dirname}/chatlogs`)
 if (!fs.existsSync(`${__dirname}/config.json`)) {
@@ -32,7 +39,8 @@ if (!fs.existsSync(`${__dirname}/config.json`)) {
     fs.writeFileSync(JSON.stringify({
         webhook: "BRIDGE URL",
         prefix: "!",
-        host: ""
+        host: "",
+        port: 25565
     }))
     process.exit(1)
 }
@@ -49,13 +57,17 @@ var argumentsTable = {
 const initBot = () => {
     var bot = mineflayer.createBot({
         host: config.host,
-        username: "feurbot"
+        port: config.port,
+        username: config.username
     })
     bot.loadPlugin(tps)
+    bot.loadPlugin(death)
     events().forEach(event => {
         event(bot, argumentsTable)
     })
 }
+
+
 setTimeout(() => initBot(), 2000)
 
 module.exports = {reconnect}
