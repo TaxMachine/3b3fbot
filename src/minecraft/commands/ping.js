@@ -9,7 +9,7 @@ module.exports = {
     func: async function(bot, args, argtable) {
         if (args.length == 1) return bot.chat(`Wrong syntax: ${this.syntax}`)
         var cleaned = clean(args[1])
-        var uuid = await username2uuid(cleaned)
+        var uuid = bot.players.cleaned.uuid
         argtable.db.get(`SELECT ping, uuid FROM playerinfo WHERE uuid = $uuid`, {
             $uuid: uuid
         }, (err, row) => {

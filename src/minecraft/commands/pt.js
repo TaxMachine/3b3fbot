@@ -8,7 +8,7 @@ module.exports = {
     description: "Displays the playtime of a specified player",
     func: async function(bot, args, argtable) {
         if (args.length == 1) return bot.chat(`Wrong syntax: ${this.syntax}`)
-        var uuid = await username2uuid(clean(args[1]))
+        var uuid = bot.players.clean(args[1]).uuid
         argtable.db.get(`SELECT playtime FROM joindates WHERE uuid = $uuid`, {
             $uuid: uuid
         }, async(err, row) => {

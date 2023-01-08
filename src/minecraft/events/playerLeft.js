@@ -1,3 +1,5 @@
+const {wsendEmbed} = require('../../functions/webhook'), config = require('../../config.json'), {mcavatar} = require('../../functions/username')
+
 module.exports = async function(bot, argtable) {
     bot.on("playerLeft", async(player) => {
         var
@@ -27,5 +29,9 @@ module.exports = async function(bot, argtable) {
                 })
             }
         }
+        await wsendEmbed(config.webhook, `${player.username}`, mcavatar(player.uuid.replace(/-/g)), {
+            title: "Left the game",
+            color: 16711680
+        })
     })
 }

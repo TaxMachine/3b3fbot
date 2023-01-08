@@ -74,11 +74,11 @@ const initBot = () => {
     events().forEach(event => {
         event(bot, argumentsTable)
     })
-    /*djsevents().forEach(event => {
+    djsevents().forEach(event => {
         event(client, bot)
-    })*/
+    })
 }
-
+client.login(config.token)
 setTimeout(() => initBot(), 2000)
 
 module.exports = {reconnect}

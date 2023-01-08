@@ -9,32 +9,15 @@ module.exports = async function(bot, argtable) {
     bot.on('message', async(jsonmsg, position, sender, verified) => {
         var uuid = sender == "00000000-0000-0000-0000-000000000000" ? null : sender.replace(/-/g, "")
         if (uuid == null) return
-        var
-            player = await uuid2username(uuid),
-            joinedAt = Date.now().toString()
-            
-
-        addPlayerJoin(player, uuid, joinedAt)
-        if (jsonmsg.translate == "multiplayer.player.joined" && player !== bot.username) {
-            await wsendEmbed(config.webhook, `${player}`, mcavatar(uuid), {
-                title: "Joined the game",
-                color: 65280
-            })
-        }
-
-        if (jsonmsg.translate == "multiplayer.player.left" && player !== bot.username) {
-            await wsendEmbed(config.webhook, `${player}`, mcavatar(uuid), {
-                title: "Left the game",
-                color: 16711680
-            })
-        }
+        var player = await uuid2username(uuid)
 
         if (jsonmsg.with.length == 1) return
 
         if (jsonmsg.translate !== "chat.type.text") return
-
+        if (jsonmsg.with[1].text.startsWith("[Discord]")) return
         await wsend(config.webhook, `${jsonmsg.with[1].text.replace(/@|\${|\\/g, "")}`, mcavatar(uuid), player)
         if (player == bot.username) return
+        
         if (!jsonmsg.with[1].text.startsWith(config.prefix)) return
 
         var

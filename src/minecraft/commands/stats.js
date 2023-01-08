@@ -9,7 +9,7 @@ module.exports = {
     func: async function(bot, args, argtable) {
         if (args.length == 1) return bot.chat(`Wrong syntax: ${this.syntax}`)
         argtable.db.get(`SELECT kill, death FROM killcount WHERE uuid = $uuid`, {
-            $uuid: await username2uuid(clean(args[1]))
+            $uuid: bot.players[clean(args[1])].uuid
         }, (err, row) => {
             if (err) return bot.chat("No such players")
             bot.chat(`${clean(args[1])} stats\nKills: ${row.kill}\nDeath: ${row.death}`)
