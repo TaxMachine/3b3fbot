@@ -1,5 +1,4 @@
-const
-    {readdirSync} = require('fs')
+const {readdirSync} = require('fs')
 
 function commands() {
     var things = [], cmd = []

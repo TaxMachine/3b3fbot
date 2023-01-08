@@ -1,4 +1,4 @@
-async function clean(message) {
+function clean(message) {
     return message.replace(/-|\\|\/|:|\//g, "")
 }
 

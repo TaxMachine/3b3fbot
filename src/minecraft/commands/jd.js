@@ -1,4 +1,4 @@
-const {clean} = require('../functions/cleaner')
+const {clean} = require('../../functions/cleaner')
 
 module.exports = {
     name: "jd",
@@ -6,7 +6,7 @@ module.exports = {
     description: "Displays the join date (since the bot joined the server) of a specified player",
     func: async function(bot, args, argtable) {
         if (args.length == 1) return bot.chat(`Wrong syntax: ${this.syntax}`)
-        var cleaned = await clean(args[1])
+        var cleaned = clean(args[1])
         argtable.db.get(`SELECT joinedAt, username FROM players WHERE username = $username`, {$username: cleaned}, (err, row) => {
             if (err) return bot.chat(`No such player "${cleaned}"`)
             var

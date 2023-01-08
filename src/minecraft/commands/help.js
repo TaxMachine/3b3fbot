@@ -1,4 +1,4 @@
-const {commands} = require('../Command'), config = require("../config.json")
+const {commands} = require('../Command'), config = require("../../config.json")
 
 module.exports = {
     name: "help",

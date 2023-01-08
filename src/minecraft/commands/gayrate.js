@@ -1,6 +1,6 @@
 const 
-    {uuid2username} = require('../functions/username'),
-    {clean} = require('../functions/cleaner')
+    {uuid2username} = require('../../functions/username'),
+    {clean} = require('../../functions/cleaner')
 
 module.exports = {
     name: "gayrate",
@@ -10,7 +10,7 @@ module.exports = {
         if (args.length == 1) return bot.chat(`Wrong syntax: ${this.syntax}`)
         var 
             gay = Math.floor(Math.random()*100),
-            cleaned = await clean(args[1])
+            cleaned = clean(args[1])
         if (cleaned == uuid2username("64a7dadab6d4433d9b803c96f91ed370")) gay = 0
         bot.chat(`${cleaned} is ${gay}% gay`)
     }

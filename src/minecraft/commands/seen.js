@@ -1,6 +1,6 @@
 const 
-    {username2uuid} = require('../functions/username'),
-    {clean} = require('../functions/cleaner')
+    {username2uuid} = require('../../functions/username'),
+    {clean} = require('../../functions/cleaner')
 
 module.exports = {
     name: "seen",
@@ -8,7 +8,7 @@ module.exports = {
     description: "Displays the last seen coordinates of a specified player",
     func: async function(bot, args, argtable) {
         if (args.length == 1) return bot.chat(`Wrong syntax: ${this.syntax}`)
-        var cleaned = await clean(args[1])
+        var cleaned = clean(args[1])
         var uuid = await username2uuid(cleaned)
         argtable.db.get(`SELECT lastseenpos, lastseentime, uuid FROM playerinfo WHERE uuid = $uuid`, {
             $uuid: uuid

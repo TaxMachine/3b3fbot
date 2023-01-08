@@ -1,9 +1,9 @@
 const
-    {username2uuid, mcavatar, uuid2username} = require('../functions/username'),
-    {wsendEmbed, wsend} = require('../functions/webhook'),
-    config = require('../config.json'),
+    {username2uuid, mcavatar, uuid2username} = require('../../functions/username'),
+    {wsendEmbed, wsend} = require('../../functions/webhook'),
+    config = require('../../config.json'),
     {commands} = require('../Command'),
-    {addPlayerJoin} = require('../functions/database')
+    {addPlayerJoin} = require('../../functions/database')
 
 module.exports = async function(bot, argtable) {
     bot.on('message', async(jsonmsg, position, sender, verified) => {

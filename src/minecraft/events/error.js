@@ -1,6 +1,6 @@
 const 
-    {reconnect} = require('../index'),
-    {log} = require('../logger')
+    {reconnect} = require('../../index'),
+    {log} = require('../../logger')
 
 module.exports = async function(bot, argtable) {
     bot.on('error', async(error) => {
