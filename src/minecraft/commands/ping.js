@@ -9,12 +9,6 @@ module.exports = {
     func: async function(bot, args, argtable) {
         if (args.length == 1) return bot.chat(`Wrong syntax: ${this.syntax}`)
         var cleaned = clean(args[1])
-        var uuid = bot.players.cleaned.uuid
-        argtable.db.get(`SELECT ping, uuid FROM playerinfo WHERE uuid = $uuid`, {
-            $uuid: uuid
-        }, (err, row) => {
-            if (err) return bot.chat("No such player")
-            bot.chat(`${cleaned}'s ping: ${row.ping}ms`)
-        })
+        bot.chat(`${cleaned}'s ping: ${bot.players[cleaned].ping}`)
     }
 }

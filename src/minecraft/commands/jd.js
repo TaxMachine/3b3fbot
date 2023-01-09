@@ -12,7 +12,7 @@ module.exports = {
             var
                 time = row.joinedAt.replace(".0", ""),
                 date = new Date(parseInt(time))
-            bot.chat(`${cleaned} joined on ${date.getDate()}-${date.getMonth()}-${date.getFullYear()} at ${date.getHours()}h ${date.getMinutes()}min ${date.getSeconds()}sec and ${date.getMilliseconds()}ms`)
+            bot.chat(`I first saw ${cleaned} on the ${date.getDate()} ${date.toLocaleString('default', { month: 'long' })} ${date.getFullYear()} at ${date.getHours()}h ${date.getMinutes()}min ${date.getSeconds()}sec and ${date.getMilliseconds()}ms`)
         })
     }
 }

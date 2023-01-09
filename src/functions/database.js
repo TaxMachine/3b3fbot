@@ -30,7 +30,7 @@ const
             $lastseenpos,
             $lastseentime
         )`, {
-            $uuid: await username2uuid(player.username),
+            $uuid: player.uuid.replace(/-/g, ""),
             $ping: player.ping,
             $lastseenpos: coords,
             $lastseentime: Date.now().toString()
@@ -40,7 +40,7 @@ const
                 SET ping = $ping, lastseenpos = $lastseenpos, lastseentime = $lastseentime
                 WHERE uuid = $uuid`, {
                     $ping: player.ping,
-                    $uuid: await username2uuid(player.username),
+                    $uuid: player.uuid.replace(/-/g, ""),
                     $lastseenpos: coords,
                     $lastseentime: Date.now().toString()
                 }, (err) => {})

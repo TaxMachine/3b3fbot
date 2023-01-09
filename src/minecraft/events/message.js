@@ -9,22 +9,19 @@ module.exports = async function(bot, argtable) {
     bot.on('message', async(jsonmsg, position, sender, verified) => {
         var uuid = sender == "00000000-0000-0000-0000-000000000000" ? null : sender.replace(/-/g, "")
         if (uuid == null) return
-        var player = await uuid2username(uuid)
+        var 
+            player = await uuid2username(uuid), 
+            message = jsonmsg.text.split("> ")[1]
 
-        if (jsonmsg.with.length == 1) return
-
-        if (jsonmsg.translate !== "chat.type.text") return
-        if (jsonmsg.with[1].text.startsWith("[Discord]")) return
-        await wsend(config.webhook, `${jsonmsg.with[1].text.replace(/@|\${|\\/g, "")}`, mcavatar(uuid), player)
+        if (message.startsWith("[Discord]")) return
+        await wsend(config.webhook, `${message.replace(/@|\${|\\/g, "")}`, mcavatar(uuid), player)
         if (player == bot.username) return
         
-        if (!jsonmsg.with[1].text.startsWith(config.prefix)) return
+        if (!message.startsWith(config.prefix)) return
 
-        var
-            msg = jsonmsg.with[1].text,
-            args = msg.split(" ")
+        var args = message.split(" ")
         commands().forEach(cmd => {
-            if (msg.startsWith(config.prefix + cmd.name)) cmd.func(bot, args, argtable)
+            if (message.startsWith(config.prefix + cmd.name)) cmd.func(bot, args, argtable)
         })
     })
 }

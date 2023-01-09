@@ -12,7 +12,7 @@ module.exports = {
             $uuid: bot.players[clean(args[1])].uuid
         }, (err, row) => {
             if (err) return bot.chat("No such players")
-            bot.chat(`${clean(args[1])} stats\nKills: ${row.kill}\nDeath: ${row.death}`)
+            bot.chat(`${clean(args[1])} stats -> Kills: ${row.kill} Death: ${row.death} KDR: ${Math.round(row.kill / row.death)}`)
         })
     }
 }

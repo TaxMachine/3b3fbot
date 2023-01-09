@@ -9,16 +9,16 @@ module.exports = {
     func: async function(bot, args, argtable) {
         if (args.length == 1) return bot.chat(`Wrong syntax: ${this.syntax}`)
         var cleaned = clean(args[1])
-        var uuid = bot.players.cleaned.uuid
+        var uuid = bot.players[cleaned].uuid.replace(/-/g, "")
         argtable.db.get(`SELECT lastseenpos, lastseentime, uuid FROM playerinfo WHERE uuid = $uuid`, {
             $uuid: uuid
         }, (err, row) => {
             if (err || row == null) return bot.chat("No such player")
             var 
-                coords = JSON.parse(row.lastseenpos),
+                coords = row.lastseenpos ? JSON.parse(row.lastseenpos) : null,
                 viewed = new Date(parseInt(row.lastseentime)),
                 textview = `${viewed.getDate()}-${viewed.getMonth()}-${viewed.getFullYear()} ${viewed.getHours()}:${viewed.getMinutes()}:${viewed.getSeconds()}`
-            bot.chat(`${cleaned} was last seen at: X: ${coords.x ? coords.x : "none"} Y: ${coords.y ? coords.y : "none"} Z: ${coords.z ? coords.z : "none"}\nLast seen Timestamp: ${textview}`)
+            bot.chat(`${cleaned} was last seen X: ${coords ? coords.x : "none"} Y: ${coords ? coords.y : "none"} Z: ${coords ? coords.z : "none"} at ${textview}`)
         })
     }
 }
