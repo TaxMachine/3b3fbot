@@ -3,16 +3,37 @@ const
     config = require('./config.json'),
     sqlite = require('sqlite3'),
     death = require('mineflayer-death-event'),
-    discord = require('discord.js'),
+    {Client, Intents, Collection} = require('discord.js'),
     fs = require('fs'),
-    client = new discord.Client(),
+    client = new Client({
+        intents: [
+            Intents.FLAGS.GUILDS, 
+            Intents.FLAGS.GUILD_MEMBERS, 
+            Intents.FLAGS.GUILD_BANS, 
+            Intents.FLAGS.GUILD_EMOJIS_AND_STICKERS, 
+            Intents.FLAGS.GUILD_INTEGRATIONS, 
+            Intents.FLAGS.GUILD_WEBHOOKS, 
+            Intents.FLAGS.GUILD_INVITES, 
+            Intents.FLAGS.GUILD_VOICE_STATES, 
+            Intents.FLAGS.GUILD_PRESENCES, 
+            Intents.FLAGS.GUILD_MESSAGES, 
+            Intents.FLAGS.GUILD_MESSAGE_REACTIONS, 
+            Intents.FLAGS.GUILD_MESSAGE_TYPING, 
+            Intents.FLAGS.DIRECT_MESSAGES, 
+            Intents.FLAGS.DIRECT_MESSAGE_REACTIONS, 
+            Intents.FLAGS.DIRECT_MESSAGE_TYPING, 
+            Intents.FLAGS.GUILD_SCHEDULED_EVENTS
+        ]
+    }),
+    {REST} = require('@discordjs/rest'),
+    {Routes} = require('discord-api-types/v9'),
+    rest = new REST({version: '9'}).setToken(config.token)
     tps = require('./functions/tps').TPS,
 
     db = new sqlite.Database(`${__dirname}/penis.db`),
-    {commands} = require('./minecraft/Command.js'),
-    {log} = require('./logger'),
     {events} = require('./minecraft/Event'),
-    {djsevents} = require('./discord/Event')
+    {djsevents} = require('./discord/Event'),
+    {djsCommands} = require('./discord/Command')
 
 
 db.run(`CREATE TABLE IF NOT EXISTS players (
@@ -57,28 +78,42 @@ const reconnect = async() => {
     await sleep(2000)
     initBot()
 }
+
+
 var argumentsTable = {
     tps: 0,
     db: db,
-    timestamps: []
+    timestamps: [],
+    players: []
 }
-const initBot = () => {
+
+
+const initBot = async() => {
     var bot = mineflayer.createBot({
         host: config.host,
         port: config.port,
         username: config.username,
         auth: 'microsoft'
     })
+    client.commands = new Collection()
     bot.loadPlugin(tps)
     bot.loadPlugin(death)
+    argumentsTable.bot = bot
     events().forEach(event => {
         event(bot, argumentsTable)
     })
     djsevents().forEach(event => {
         event(client, bot)
     })
+    djsCommands(client)
+    client.on("ready", async () => {
+        await rest.put(
+            Routes.applicationCommands(client.user.id),
+            {body: djsCommands(client) }
+        )
+    })
 }
 client.login(config.token)
 setTimeout(() => initBot(), 2000)
 
-module.exports = {reconnect}
+module.exports = {reconnect, argumentsTable}

@@ -10,8 +10,9 @@
   "author": "TaxMachine",
   "license": "ISC",
   "dependencies": {
+    "@discordjs/rest": "^1.5.0",
     "axios": "^1.2.2",
-    "discord.js": "^12.5.3",
+    "discord.js": "^13.12.0",
     "mineflayer": "^4.6.0",
     "mineflayer-death-event": "^1.0.0",
     "nodemon": "^2.0.20",

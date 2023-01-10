@@ -11,7 +11,8 @@ module.exports = {
         var 
             gay = Math.floor(Math.random()*100),
             cleaned = clean(args[1])
-        if (cleaned == uuid2username("64a7dadab6d4433d9b803c96f91ed370")) gay = 0
+        if (!bot.players.hasOwnProperty(cleaned)) return bot.chat("No such player online")
+        if (bot.players[cleaned].uuid.replace(/-/g, "") == "64a7dadab6d4433d9b803c96f91ed370") gay = 0
         bot.chat(`${cleaned} is ${gay}% gay`)
     }
 }

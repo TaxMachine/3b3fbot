@@ -2,7 +2,6 @@ const {wsendEmbed} = require('../../functions/webhook'), config = require('../..
 
 module.exports = async function(bot, argtable) {
     bot.on("playerJoined", async(player) => {
-        console.log(player)
         if (player.username == bot.username) return
         argtable.timestamps.push({
             uuid: player.uuid.replace(/-/g, ""),

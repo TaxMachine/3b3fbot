@@ -9,7 +9,6 @@ module.exports = async function(bot, argtable) {
         for (let i = 0; i < timestamps.length; i++) {
             if (timestamps[i].uuid == uuid && timestamps.join != null) {
                 timestamps[i].leave = new Date().getTime()
-                console.log(timestamps)
                 var totalms = Math.abs(timestamps[i].leave - timestamps[i].join)
                 argtable.db.run(`INSERT INTO joindates VALUES (
                     $uuid,
