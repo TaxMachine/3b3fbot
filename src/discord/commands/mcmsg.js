@@ -1,10 +1,11 @@
 const
+    {MessageEmbed} = require('discord.js'),
     {argumentsTable} = require('../../index'),
     {SlashCommandBuilder} = require('@discordjs/builders')
 
 module.exports = {
     data: new SlashCommandBuilder()
-        .setName("msg")
+        .setName("mcmsg")
         .setDescription("same thing as in-game /minecraft:msg but from discord")
         .addStringOption(option =>
             option.setName('username')
@@ -20,6 +21,9 @@ module.exports = {
         var player = interaction.options.getString('username')
         if (!Object.keys(argumentsTable.bot.players).includes(player)) return interaction.reply({content: "This player is not online", ephemeral: true})
         argumentsTable.bot.whisper(player, interaction.options.getString('message'))
-        interaction.reply({content: `you -> ${player}: ${interaction.options.getString("message")}`, ephemeral: true})
+        const embed = new MessageEmbed()
+            .setTitle("Minecraft:msg")
+            .setDescription(`you -> ${player}: ${interaction.options.getString("message")}`)
+        interaction.reply({embeds: [embed], ephemeral: true})
     }
 }
