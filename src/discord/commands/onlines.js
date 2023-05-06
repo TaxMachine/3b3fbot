@@ -7,7 +7,7 @@ const
 module.exports = {
     data: new SlashCommandBuilder()
         .setName("onlines")
-        .setDescription("Gives you a list of online players from the minecraft server"),
+        .setDescription("Gives a list of online players from the minecraft server"),
     run: async(client, interaction) => {
         var players = Object.keys(argumentsTable.bot.players)
         const onlines = new MessageEmbed()

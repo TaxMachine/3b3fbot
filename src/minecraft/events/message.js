@@ -8,7 +8,8 @@ module.exports = async function(bot, argtable) {
     bot.on('message', async(jsonmsg, position, sender, verified) => {
         var uuid = sender == "00000000-0000-0000-0000-000000000000" ? null : sender.replace(/-/g, "")
         if (uuid == null) return
-        if (jsonmsg.translate == "commands.message.display.incoming") return
+        console.log(jsonmsg)
+        if (jsonmsg.translate == "commands.message.display.incoming" || jsonmsg.translate == "commands.message.display.outgoing") return
         var 
             player = await uuid2username(uuid), 
             message = jsonmsg.text.split("> ")[1]

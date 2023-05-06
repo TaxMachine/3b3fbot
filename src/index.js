@@ -30,7 +30,7 @@ const
     rest = new REST({version: '9'}).setToken(config.token)
     tps = require('./functions/tps').TPS,
 
-    db = new sqlite.Database(`${__dirname}/penis.db`),
+    db = new sqlite.Database(`${__dirname}/databases/${config.host}.db`),
     {events} = require('./minecraft/Event'),
     {djsevents} = require('./discord/Event'),
     {djsCommands} = require('./discord/Command')
@@ -84,7 +84,8 @@ var argumentsTable = {
     tps: 0,
     db: db,
     timestamps: [],
-    players: []
+    players: [],
+    client: client
 }
 
 
@@ -105,13 +106,12 @@ const initBot = async() => {
     djsevents().forEach(event => {
         event(client, bot)
     })
-    djsCommands(client)
-    client.on("ready", async () => {
-        await rest.put(
+    var commands = djsCommands(client)
+    rest.put(
             Routes.applicationCommands(client.user.id),
-            {body: djsCommands(client) }
-        )
-    })
+            {body: commands }
+        ).then(() => console.log(commands))
+        .catch(console.error)
 }
 client.login(config.token)
 setTimeout(() => initBot(), 2000)

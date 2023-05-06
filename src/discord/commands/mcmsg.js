@@ -20,7 +20,7 @@ module.exports = {
     run: async(client, interaction) => {
         var player = interaction.options.getString('username')
         if (!Object.keys(argumentsTable.bot.players).includes(player)) return interaction.reply({content: "This player is not online", ephemeral: true})
-        argumentsTable.bot.whisper(player, interaction.options.getString('message'))
+        argumentsTable.bot.chat(`/minecraft:msg ${player} [Discord] ${interaction.member.user.username} > ${interaction.options.getString('message')}`)
         const embed = new MessageEmbed()
             .setTitle("Minecraft:msg")
             .setDescription(`you -> ${player}: ${interaction.options.getString("message")}`)
