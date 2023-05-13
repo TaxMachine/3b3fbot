@@ -11,7 +11,7 @@ module.exports = {
         var cleaned = clean(args[1])
         if (!Object.keys(bot.players).includes(cleaned)) return bot.chat("No such player")
         var uuid = bot.players[cleaned].uuid.replace(/-/g, "")
-        argtable.db.get(`SELECT playtime FROM joindates WHERE uuid = $uuid`, {
+        argtable.db.db.get(`SELECT playtime FROM joindates WHERE uuid = $uuid`, {
             $uuid: uuid
         }, async(err, row) => {
             if (err || !row) return bot.chat(`No such player ${cleaned}`)

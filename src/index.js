@@ -1,7 +1,7 @@
 const 
     mineflayer = require('mineflayer'),
     config = require('./config.json'),
-    sqlite = require('sqlite3'),
+    database = require('./functions/database'),
     death = require('mineflayer-death-event'),
     {Client, Intents, Collection} = require('discord.js'),
     fs = require('fs'),
@@ -30,36 +30,13 @@ const
     rest = new REST({version: '9'}).setToken(config.token)
     tps = require('./functions/tps').TPS,
 
-    db = new sqlite.Database(`${__dirname}/databases/${config.host}.db`),
+    db = new database(`${__dirname}/databases/${config.host}.db`),
     {events} = require('./minecraft/Event'),
     {djsevents} = require('./discord/Event'),
     {djsCommands} = require('./discord/Command')
 
+db.initDB()
 
-db.run(`CREATE TABLE IF NOT EXISTS players (
-    username text not null,
-    uuid text not null,
-    joinedAt text not null,
-    PRIMARY KEY(uuid)
-)`)
-db.run(`CREATE TABLE IF NOT EXISTS playerinfo (
-    uuid text not null,
-    ping text not null,
-    lastseenpos text,
-    lastseentime text not null,
-    PRIMARY KEY(uuid)
-)`)
-db.run(`CREATE TABLE IF NOT EXISTS killcount (
-    uuid text not null,
-    kill int,
-    death int,
-    PRIMARY KEY(uuid)
-)`)
-db.run(`CREATE TABLE IF NOT EXISTS joindates (
-    uuid text not null,
-    playtime text not null,
-    PRIMARY KEY(uuid)
-)`)
 fs.existsSync(`${__dirname}/logs`) ? null : fs.mkdirSync(`${__dirname}/logs`)
 fs.existsSync(`${__dirname}/chatlogs`) ? null : fs.mkdirSync(`${__dirname}/chatlogs`)
 if (!fs.existsSync(`${__dirname}/config.json`)) {
@@ -68,7 +45,9 @@ if (!fs.existsSync(`${__dirname}/config.json`)) {
         webhook: "BRIDGE URL",
         prefix: "!",
         host: "",
-        port: 25565
+        port: 25565,
+        username: "MAIL",
+        token: "DISCORD BOT TOKEN"
     }))
     process.exit(1)
 }

@@ -7,7 +7,7 @@ module.exports = {
     func: async function(bot, args, argtable) {
         if (args.length == 1) return bot.chat(`Wrong syntax: ${this.syntax}`)
         var cleaned = clean(args[1])
-        argtable.db.get(`SELECT joinedAt, username FROM players WHERE username = $username`, {$username: cleaned}, (err, row) => {
+        argtable.db.db.get(`SELECT joinedAt, username FROM players WHERE username = $username`, {$username: cleaned}, (err, row) => {
             if (err || !row) return bot.chat(`No such player "${cleaned}"`)
             var
                 time = row.joinedAt.replace(".0", ""),

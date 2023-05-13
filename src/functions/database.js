@@ -1,11 +1,40 @@
 const 
-    sqlite3 = require('sqlite3'),
-    db = new sqlite3.Database(`${__dirname}/../penis.db`),
-    {username2uuid} = require('./username')
+    sqlite3 = require('sqlite3')
 
-const 
+class Database {
+    constructor(file) {
+        this.db = new sqlite3.Database(file)
+    }
+
+    initDB() {
+        this.db.run(`CREATE TABLE IF NOT EXISTS players (
+            username text not null,
+            uuid text not null,
+            joinedAt text not null,
+            PRIMARY KEY(uuid)
+        )`)
+        this.db.run(`CREATE TABLE IF NOT EXISTS playerinfo (
+            uuid text not null,
+            ping text not null,
+            lastseenpos text,
+            lastseentime text not null,
+            PRIMARY KEY(uuid)
+        )`)
+        this.db.run(`CREATE TABLE IF NOT EXISTS killcount (
+            uuid text not null,
+            kill int,
+            death int,
+            PRIMARY KEY(uuid)
+        )`)
+        this.db.run(`CREATE TABLE IF NOT EXISTS joindates (
+            uuid text not null,
+            playtime text not null,
+            PRIMARY KEY(uuid)
+        )`)
+    }
+
     addPlayerJoin = async(username, uuid, joinedAt) => {
-        db.run(`INSERT INTO players (username, uuid, joinedAt) VALUES (
+        this.db.run(`INSERT INTO players (username, uuid, joinedAt) VALUES (
             $username,
             $uuid,
             $joinedAt
@@ -13,18 +42,22 @@ const
             $username: username,
             $uuid: uuid,
             $joinedAt: joinedAt
-        }, (err) => {})
-    },
+        }, (err) => {
+            console.log(err)
+        })
+    }
+
     parseCoordinates = async(player) => {
         return {
             x: Math.round(parseFloat(player.entity.position.x)),
             y: Math.round(parseFloat(player.entity.position.y)),
             z: Math.round(parseFloat(player.entity.position.z))
         }
-    },
+    }
+
     playerUpdate = async(player) => {
         var coords = player.entity ? JSON.stringify(await parseCoordinates(player)) : ""
-        db.run(`INSERT INTO playerinfo VALUES (
+        this.db.run(`INSERT INTO playerinfo VALUES (
             $uuid,
             $ping,
             $lastseenpos,
@@ -36,19 +69,22 @@ const
             $lastseentime: Date.now().toString()
         }, async(err) => {
             if (err) {
-                db.run(`UPDATE playerinfo
+                this.db.run(`UPDATE playerinfo
                 SET ping = $ping, lastseenpos = $lastseenpos, lastseentime = $lastseentime
                 WHERE uuid = $uuid`, {
                     $ping: player.ping,
                     $uuid: player.uuid.replace(/-/g, ""),
                     $lastseenpos: coords,
                     $lastseentime: Date.now().toString()
-                }, (err) => {})
+                }, (err) => {
+                    console.log(err)
+                })
             }
         })
-    },
+    }
+
     addPlayerKill = async(offender) => {
-        db.run(`INSERT INTO killcount (uuid, kill) VALUES (
+        this.db.run(`INSERT INTO killcount (uuid, kill) VALUES (
             $uuid,
             $kill
         )`, {
@@ -60,12 +96,15 @@ const
                 SET kill = kill + 1
                 WHERE uuid = $uuid`, {
                     $uuid: offender.id.replace(/-/g, "")
-                }, (err) => {})
+                }, (err) => {
+                    console.log(err)
+                })
             }
         })
-    },
+    }
+
     addPlayerDeath = async(victim) => {
-        db.run(`INSERT INTO killcount (uuid, death) VALUES (
+        this.db.run(`INSERT INTO killcount (uuid, death) VALUES (
             $uuid,
             $death
         )`, {
@@ -77,14 +116,14 @@ const
                 SET death = death + 1
                 WHERE uuid = $uuid`, {
                     $uuid: victim.id.replace(/-/g, "")
-                }, (err) => {})
+                }, (err) => {
+                    console.log(err)
+                })
             }
         })
     }
 
-module.exports = {
-    addPlayerJoin,
-    playerUpdate,
-    addPlayerKill,
-    addPlayerDeath
+    db = this.db
 }
+
+module.exports = Database

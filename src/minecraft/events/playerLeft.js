@@ -1,4 +1,7 @@
-const {wsendEmbed} = require('../../functions/webhook'), config = require('../../config.json'), {mcavatar} = require('../../functions/username')
+const 
+    {wsendEmbed} = require('../../functions/webhook'), 
+    config = require('../../config.json'), 
+    {mcavatar} = require('../../functions/username')
 
 module.exports = async function(bot, argtable) {
     bot.on("playerLeft", async(player) => {
@@ -10,7 +13,7 @@ module.exports = async function(bot, argtable) {
             if (timestamps[i].uuid == uuid && timestamps.join != null) {
                 timestamps[i].leave = new Date().getTime()
                 var totalms = Math.abs(timestamps[i].leave - timestamps[i].join)
-                argtable.db.run(`INSERT INTO joindates VALUES (
+                argtable.db.db.run(`INSERT INTO joindates VALUES (
                     $uuid,
                     $ms
                 )`, {
@@ -18,7 +21,7 @@ module.exports = async function(bot, argtable) {
                     $ms: totalms
                 }, (err) => {
                     if (err) {
-                        argtable.db.run(`UPDATE joindates
+                        argtable.db.db.run(`UPDATE joindates
                         SET playtime = playtime + $newplaytime
                         WHERE uuid = $uuid`, {
                             $newplaytime: totalms,

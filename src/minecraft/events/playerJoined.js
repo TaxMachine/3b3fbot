@@ -1,4 +1,7 @@
-const {wsendEmbed} = require('../../functions/webhook'), config = require('../../config.json'), {mcavatar} = require('../../functions/username'), {addPlayerJoin} = require('../../functions/database')
+const 
+    {wsendEmbed} = require('../../functions/webhook'), 
+    config = require('../../config.json'), 
+    {mcavatar} = require('../../functions/username')
 
 module.exports = async function(bot, argtable) {
     bot.on("playerJoined", async(player) => {
@@ -8,7 +11,7 @@ module.exports = async function(bot, argtable) {
             join: new Date().getTime(),
             leave: null
         })
-        addPlayerJoin(player.username, player.uuid.replace(/-/g, ""), Date.now())
+        argtable.db.addPlayerJoin(player.username, player.uuid.replace(/-/g, ""), Date.now())
         await wsendEmbed(config.webhook, `${player.username}`, mcavatar(player.uuid.replace(/-/g, "")), {
             title: "Joined the game",
             color: 65280

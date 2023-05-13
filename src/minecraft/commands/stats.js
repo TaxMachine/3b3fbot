@@ -11,7 +11,7 @@ module.exports = {
         if (args.length == 1) return bot.chat(`Wrong syntax: ${this.syntax}`)
         var cleaned = clean(args[1])
         if (!Object.keys(bot.players).includes(cleaned)) return bot.chat("No such player")
-        argtable.db.get(`SELECT kill, death FROM killcount WHERE uuid = $uuid`, {
+        argtable.db.db.get(`SELECT kill, death FROM killcount WHERE uuid = $uuid`, {
             $uuid: bot.players[cleaned].uuid
         }, (err, row) => {
             if (err || !row) return bot.chat("No such players")

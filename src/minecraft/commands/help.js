@@ -5,6 +5,11 @@ module.exports = {
     syntax: "help",
     description: "Displays every commands and syntax",
     func: async function(bot, args, argtable) {
+        for (var i = 0; i < args.length; i++) {
+            if (args[i] === '') {
+                args.splice(i, 1)
+            }
+        }
         if (args.length == 2) {
             commands().forEach(cmd => {
                 if (cmd.name === clean(args[1])) bot.chat(`${config.prefix}${cmd.syntax}`)

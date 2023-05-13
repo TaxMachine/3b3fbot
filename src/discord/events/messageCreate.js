@@ -1,6 +1,6 @@
 module.exports = async function(client, bot) {
     client.on("messageCreate", async(message) => {
-        if (message.channel.id != "1058426715078152322" || message.author.bot) return
+        if (message.channel.id != "1104485873883557938" || message.author.bot) return
         bot.chat(`[Discord] ${message.author.username} > ${message.content}`)
     })
 }
